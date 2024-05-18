@@ -11,8 +11,8 @@ export class WebEngine {
     readonly itemPageData: ConfigDataItemPage[];
     readonly headers: Record<string, string>;
 
-    constructor(configPath: string) {
-        const data = loadYamlFile<ConfigData>(configPath);
+    constructor(fileData: string) {
+        const data = loadYamlFile<ConfigData>(fileData);
 
         this.name = data.name;
         this.url = data.url;

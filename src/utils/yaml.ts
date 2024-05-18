@@ -1,8 +1,5 @@
 import { parse } from 'yaml'
-import { readFileSync } from 'fs'
 
-export function loadYamlFile<T>(path: string): T {
-    const file = readFileSync(path, 'utf8')
-
+export function loadYamlFile<T>(file: string): T {
     return parse(file)
 }

@@ -1,18 +1,15 @@
 {
-  "name": "universal-store",
-  "module": "src/index.ts",
+  "name": "@doginuwu/universal-store",
+  "module": "build/index.js",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "type": "module",
-  "author": {
-    "name": "Luiz",
-    "email": "doginuwu@gmail.com"
-  },
-  "license": "MIT",
+  "author": "Luiz <doginuwu@gmail.com>",
+  "version": "0.0.1c",
   "scripts": {
     "start": "bun run src/index.ts",
     "build": "bun run clean && bun run build:declaration && bun run build:project",
-    "build:project": "bun build src/index.ts --outdir ./build --target node",
+    "build:project": "bun build src/index.ts --outdir ./build",
     "build:declaration": "tsc --declaration --emitDeclarationOnly --outDir ./build",
     "clean": "rm -rf build"
   },
@@ -30,5 +27,19 @@
   },
   "files": [
     "build"
-  ]
+  ],
+  "description": "To install dependencies:",
+  "directories": {
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DoginUwU/universal-store-engine.git"
+  },
+  "license": "MIT",
+  "private": false,
+  "bugs": {
+    "url": "https://github.com/DoginUwU/universal-store-engine/issues"
+  },
+  "homepage": "https://github.com/DoginUwU/universal-store-engine#readme"
 }
