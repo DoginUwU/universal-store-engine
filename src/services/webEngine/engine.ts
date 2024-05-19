@@ -3,6 +3,12 @@ import { capitalize } from "../../utils/string";
 import { loadYamlFile } from "../../utils/yaml";
 import { DownloadContext } from "./generators/download/DownloadContext";
 import type { ConfigData, ConfigDataItemPage, ConfigDataSearch, GetItemParams, Item, ItemSearch, Search, SearchParams } from "./types";
+import type {FetchEngine} from "../fetchEngine/fetch";
+import {DefaultFetch} from "../fetchEngine/defaults/DefaultFetch";
+
+export interface WebEngineConfig {
+    fetcher: FetchEngine;
+}
 
 export class WebEngine {
     readonly name: string;
@@ -10,9 +16,12 @@ export class WebEngine {
     readonly searchData: ConfigDataSearch[];
     readonly itemPageData: ConfigDataItemPage[];
     readonly headers: Record<string, string>;
+    readonly fetcher: FetchEngine;
 
-    constructor(fileData: string) {
+    constructor(fileData: string, config?: WebEngineConfig) {
         const data = loadYamlFile<ConfigData>(fileData);
+
+        this.fetcher = config?.fetcher ?? new DefaultFetch();
 
         this.name = data.name;
         this.url = data.url;
@@ -28,7 +37,8 @@ export class WebEngine {
     async search(params: SearchParams): Promise<Search> {
         const searchData = this.searchData[0];
 
-        const page = await getPage(this.buildUrl(searchData.path, params), this.headers);
+        const url = this.buildUrl(searchData.path, params);
+        const page = await getPage(url, { headers: this.headers, fetcher: this.fetcher });
 
         const itemsSelector = searchData.selectors.find((selector) => selector.type === 'items');
         const items = page(itemsSelector?.selector).toArray();
@@ -59,7 +69,8 @@ export class WebEngine {
         }
 
         const fields = itemPage.fields;
-        const page = await getPage(this.buildUrl(params.path), this.headers);
+        const url = this.buildUrl(params.path);
+        const page = await getPage(url, { headers: this.headers, fetcher: this.fetcher });
 
         const titleField = fields.find((field) => field.name === 'title');
         const imageField = fields.find((field) => field.name === 'image');

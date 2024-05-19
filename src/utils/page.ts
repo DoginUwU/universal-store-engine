@@ -1,8 +1,13 @@
 import { load } from "cheerio";
+import type { FetchEngine } from "../services/fetchEngine/fetch";
 
-export async function getPage(url: string, headers: Record<string, string>) {
-    const response = await fetch(url, { headers });
-    const html = await response.text();
+interface GetPageConfig {
+    headers: Record<string, string>;
+    fetcher: FetchEngine;
+}
+
+export async function getPage(url: string, config: GetPageConfig) {
+    const { data } = await config.fetcher.get<string>(url, { headers: config.headers });
     
-    return load(html);
+    return load(data);
 }
