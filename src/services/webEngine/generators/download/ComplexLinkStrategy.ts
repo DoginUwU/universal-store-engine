@@ -1,6 +1,5 @@
-import axios from "axios";
 import type { CheerioAPI } from "cheerio";
-import type { DownloadStrategy, DownloadStrategyParams, DownloadStrategyReturn } from "./DownloadStrategy";
+import {DownloadStrategy, type DownloadStrategyParams, type DownloadStrategyReturn} from "./DownloadStrategy";
 
 interface ComplexLinkStrategyParams extends DownloadStrategyParams {
     type: 'complex_link';
@@ -26,9 +25,13 @@ type Step = {
     is_last?: boolean;
 } & (FindInHtmlStep | MakeRequestStep);
 
-export class ComplexLinkStrategy implements DownloadStrategy {
+export class ComplexLinkStrategy extends DownloadStrategy {
     readonly type = 'complex_link';
     private globalVariables: Record<string, unknown> = {};
+
+    constructor() {
+        super();
+    }
 
     async execute(page: CheerioAPI, params: ComplexLinkStrategyParams): Promise<DownloadStrategyReturn> {
         let url = '';
@@ -79,14 +82,16 @@ export class ComplexLinkStrategy implements DownloadStrategy {
     }
 
     private async makeRequest(step: Step & { type: 'make_request' }) {
-        const response = await axios.request({
+        const { data } = await this.fetcher.request({
             url: step.url,
             method: step.method,
-            headers: step.headers,
-            data: step.body ? this.replaceVariables(step.body) : undefined,
+            body: step.body ? this.replaceVariables(step.body) : undefined,
+            config: {
+                headers: step.headers,
+            }
         });
 
-        return response.data;
+        return data;
     }
 
     private replaceVariables(rawData: string) {

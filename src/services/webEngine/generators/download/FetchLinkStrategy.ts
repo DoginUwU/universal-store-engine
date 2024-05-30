@@ -1,5 +1,5 @@
 import type { CheerioAPI } from "cheerio";
-import type { DownloadStrategy, DownloadStrategyParams, DownloadStrategyReturn } from "./DownloadStrategy";
+import {DownloadStrategy, type DownloadStrategyParams, type DownloadStrategyReturn} from "./DownloadStrategy";
 
 interface FetchLinkStrategyParams extends DownloadStrategyParams {
     type: 'fetch_link';
@@ -9,8 +9,12 @@ interface FetchLinkStrategyParams extends DownloadStrategyParams {
     response_body?: string;
 }
 
-export class FetchLinkStrategy implements DownloadStrategy {
+export class FetchLinkStrategy extends DownloadStrategy {
     readonly type = 'fetch_link';
+
+    constructor() {
+        super();
+    }
 
     async execute(page: CheerioAPI, params: FetchLinkStrategyParams): Promise<DownloadStrategyReturn> {
         const regex = new RegExp(params.regex!);

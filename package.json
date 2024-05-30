@@ -5,7 +5,7 @@
   "types": "build/index.d.ts",
   "type": "module",
   "author": "Luiz <doginuwu@gmail.com>",
-  "version": "0.0.1d",
+  "version": "0.0.2d",
   "scripts": {
     "start": "bun run src/index.ts",
     "build": "bun run clean && bun run build:declaration && bun run build:project",

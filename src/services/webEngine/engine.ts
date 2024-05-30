@@ -89,6 +89,7 @@ export class WebEngine {
             
             if(downloadField) {
                 const context = new DownloadContext(page, downloadField.generator)
+                context.setFetcher(this.fetcher)
                 const { url } = await context.executeStrategy();
 
                 download = url;

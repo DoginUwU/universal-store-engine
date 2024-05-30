@@ -1,14 +1,15 @@
-import type { CheerioAPI } from "cheerio";
-import type { DownloadStrategy, DownloadStrategyParams, DownloadStrategyReturn } from "./DownloadStrategy";
-import { FetchLinkStrategy } from "./FetchLinkStrategy";
-import { ComplexLinkStrategy } from "./ComplexLinkStrategy";
+import type {CheerioAPI} from "cheerio";
+import type {DownloadStrategy, DownloadStrategyParams, DownloadStrategyReturn} from "./DownloadStrategy";
+import {FetchLinkStrategy} from "./FetchLinkStrategy";
+import {ComplexLinkStrategy} from "./ComplexLinkStrategy";
+import type {FetchEngine} from "../../../fetchEngine/fetch";
 
 const STRATEGIES = [new FetchLinkStrategy(), new ComplexLinkStrategy()] as const;
 
 export class DownloadContext {
   private strategy: DownloadStrategy;
-  private page: CheerioAPI;
-  private params: DownloadStrategyParams;
+  private readonly page: CheerioAPI;
+  private readonly params: DownloadStrategyParams;
 
   constructor(page: CheerioAPI, params: DownloadStrategyParams) {
     this.params = params;
@@ -21,6 +22,10 @@ export class DownloadContext {
     }
 
     this.strategy = strategy;
+  }
+
+  setFetcher(fetcher: FetchEngine) {
+    this.strategy.fetcher = fetcher;
   }
 
   async executeStrategy(): Promise<DownloadStrategyReturn> {
